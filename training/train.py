@@ -75,7 +75,7 @@ def train(
     losses = []
     correct_predictions = 0
 
-    for d in tqdm(data_loader):
+    for d in tqdm(data_loader, total=len(data_loader)):
         input_ids = d['input_ids'].to(device) # [16, 512]
         attention_mask = d['attention_mask'].to(device) # [16, 512]
         targets = d['spam'].to(device) # [16]
@@ -120,7 +120,7 @@ def evaluate_model(
     correct_predictions = 0
 
     with torch.no_grad():
-        for d in tqdm(data_loader):
+        for d in tqdm(data_loader, total=len(data_loader)):
             input_ids = d['input_ids'].to(device) # [16, 512]
             attention_mask = d['attention_mask'].to(device) # [16, 512]
             targets = d['spam'].to(device) # [16]

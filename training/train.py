@@ -10,6 +10,7 @@ import torch.nn as nn
 import config
 from dataset import EmailDataset
 from model import SpamClassifier
+from tqdm import tqdm
 
 df = pd.read_csv("../data/processed_data.csv")
 
@@ -74,7 +75,7 @@ def train(
     losses = []
     correct_predictions = 0
 
-    for d in data_loader:
+    for d in tqdm(data_loader):
         input_ids = d['input_ids'].to(device) # [16, 512]
         attention_mask = d['attention_mask'].to(device) # [16, 512]
         targets = d['spam'].to(device) # [16]
@@ -119,7 +120,7 @@ def evaluate_model(
     correct_predictions = 0
 
     with torch.no_grad():
-        for d in data_loader:
+        for d in tqdm(data_loader):
             input_ids = d['input_ids'].to(device) # [16, 512]
             attention_mask = d['attention_mask'].to(device) # [16, 512]
             targets = d['spam'].to(device) # [16]
@@ -146,7 +147,9 @@ def evaluate_model(
 
 if __name__ == "__main__":
     best_accuracy = 0
-
+    print(f"TRAINING ON {config.device}")
+    print("-----------------------------------")
+    print()
     for epoch in range(config.EPOCHS):
         print(f'Epoch {epoch + 1}/{config.EPOCHS}')
         print('-' * 10)

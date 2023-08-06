@@ -1,8 +1,8 @@
 import os
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+import base64
 
 # Define the scopes needed for Gmail API
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
@@ -13,12 +13,12 @@ def get_gmail_service():
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     # If credentials are not available or are expired, authenticate via OAuth2 flow
-    if not creds or not creds.valid:
-        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
-        # Save the credentials for future use
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+    # if not creds or not creds.valid:
+    #     flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+    #     creds = flow.run_local_server(port=0)
+    #     # Save the credentials for future use
+    #     with open('token.json', 'w') as token:
+    #         token.write(creds.to_json())
 
     # Build the Gmail API service
     service = build('gmail', 'v1', credentials=creds)
@@ -38,10 +38,22 @@ def get_message(service, user_id='me', msg_id=''):
     try:
         # Get the content of a specific message
         message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+
+        # Extract the email body from the 'payload' and 'body' fields
+        payload = message['payload']
+        parts = payload['parts'] if 'parts' in payload else []
+        for part in parts:
+            if part['mimeType'] == 'text/plain':
+                body = part['body']['data']
+                decoded_body = base64.urlsafe_b64decode(body).decode('utf-8')
+                message['body'] = decoded_body
+                break
+
         return message
     except Exception as e:
         print('An error occurred:', e)
         return None
+
 
 if __name__ == '__main__':
     # Get the Gmail API service

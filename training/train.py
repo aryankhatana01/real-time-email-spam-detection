@@ -6,11 +6,15 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from transformers import get_linear_schedule_with_warmup
 import torch.nn as nn
+import warnings
 
 import config
 from dataset import EmailDataset
 from model import SpamClassifier
-from tqdm import tqdm
+from train_fn import train
+from eval_fn import evaluate_model
+
+warnings.filterwarnings("ignore")
 
 df = pd.read_csv("../data/processed_data.csv")
 
@@ -60,90 +64,6 @@ scheduler = get_linear_schedule_with_warmup(
 )
 
 loss_fn = nn.CrossEntropyLoss().to(config.device)
-
-def train(
-    model,
-    loss_fn,
-    optimizer,
-    scheduler,
-    device,
-    data_loader,
-    n_examples
-):
-    model = model.train() # Setting Model in training mode
-
-    losses = []
-    correct_predictions = 0
-
-    for d in tqdm(data_loader, total=len(data_loader)):
-        input_ids = d['input_ids'].to(device) # [16, 512]
-        attention_mask = d['attention_mask'].to(device) # [16, 512]
-        targets = d['spam'].to(device) # [16]
-
-        # Forward Propogation
-        outputs = model(
-            input_ids=input_ids,
-            attention_mask=attention_mask
-        ) # [16, 3]
-
-        # Calculating Loss
-        loss = loss_fn(outputs, targets)
-
-        _, preds = torch.max(outputs, dim=1)
-
-        correct_predictions += torch.sum(preds == targets)
-        losses.append(loss.item())
-        
-        # Backward Propogation
-        loss.backward()
-        nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0) # Clipping Gradient (Exploding Gradient Problem)
-        optimizer.step()
-        scheduler.step()
-        optimizer.zero_grad() # Resetting gradients
-
-    train_acc = correct_predictions.double() / n_examples
-    train_loss = np.mean(losses)
-    
-    return train_acc, train_loss
-
-
-def evaluate_model(
-    model,
-    loss_fn,
-    device,
-    data_loader,
-    n_examples   
-):
-    model = model.eval() # Setting Model in evaluation mode
-
-    losses = []
-    correct_predictions = 0
-
-    with torch.no_grad():
-        for d in tqdm(data_loader, total=len(data_loader)):
-            input_ids = d['input_ids'].to(device) # [16, 512]
-            attention_mask = d['attention_mask'].to(device) # [16, 512]
-            targets = d['spam'].to(device) # [16]
-
-            # Forward Propogation
-            outputs = model(
-                input_ids=input_ids,
-                attention_mask=attention_mask
-            ) # [16, 3]
-
-            # Calculating Loss
-            loss = loss_fn(outputs, targets)
-
-            _, preds = torch.max(outputs, dim=1)
-
-            correct_predictions += torch.sum(preds == targets)
-            losses.append(loss.item())
-        
-    val_acc = correct_predictions.double() / n_examples
-    val_loss = np.mean(losses)
-
-    return val_acc, val_loss
-
 
 if __name__ == "__main__":
     best_accuracy = 0

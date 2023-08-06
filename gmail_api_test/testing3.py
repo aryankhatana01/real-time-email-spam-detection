@@ -1,6 +1,4 @@
 from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
-import pickle
 import os.path
 import base64
 from google.oauth2.credentials import Credentials
@@ -73,6 +71,6 @@ def getEmails():
             i+=1
         except Exception as e:
             print(e)
-            print('\n')
+            break
 
 getEmails()

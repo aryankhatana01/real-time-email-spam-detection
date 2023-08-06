@@ -16,4 +16,3 @@ class SpamClassifier(nn.Module):
         )[1]
         output = self.drop(pooled_output)
         return self.out(output)
-     

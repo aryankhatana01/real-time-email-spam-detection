@@ -3,6 +3,9 @@ import os.path
 import base64
 from google.oauth2.credentials import Credentials
 from bs4 import BeautifulSoup
+import time
+from datetime import datetime
+
 
 def get_gmail_service():
     # Load or create credentials
@@ -20,9 +23,12 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 def getEmails():
     # Connect to the Gmail API
     service = get_gmail_service()
+    after_date = '2023/08/01'
+    after_datetime = datetime.strptime(after_date, '%Y/%m/%d')
+    query = f"is:unread after:{after_datetime.strftime('%Y/%m/%d')}"
 
     # request a list of all the messages
-    result = service.users().messages().list(userId='me', q='is:unread').execute()
+    result = service.users().messages().list(userId='me', q=query).execute()
 
     # We can also pass maxResults to get any number of emails. Like this:
     # result = service.users().messages().list(maxResults=200, userId='me').execute()
@@ -31,7 +37,6 @@ def getEmails():
     # messages is a list of dictionaries where each dictionary contains a message id.
 
     # iterate through all the messages
-    i = 0
     for msg in messages:
         # Get the message from its id
         txt = service.users().messages().get(userId='me', id=msg['id']).execute()
@@ -66,9 +71,6 @@ def getEmails():
             print("From: ", sender)
             print("Message: ", body)
             print('\n')
-            if i>5:
-                break
-            i+=1
         except Exception as e:
             print(e)
             break

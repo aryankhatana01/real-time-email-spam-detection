@@ -79,14 +79,13 @@ def getEmails(after_date):
                 id_ = msg['id']
 
                 # Printing the subject, sender's email and message
-                print("Subject: ", subject)
-                print("From: ", sender)
-                print("Message: ", body)
-                print('\n')
+                # print("Subject: ", subject)
+                # print("From: ", sender)
+                # print("Message: ", body)
+                # print('\n')
                 emails_d[id_] = {'subject': subject, 'sender': sender, 'body': body}
                 resp = service.users().messages().modify(userId='me', id=id_, body={'removeLabelIds': ['UNREAD']}).execute()
-                print(resp)
-            except Exception as e:
+            except:
                 pass
     return emails_d
 

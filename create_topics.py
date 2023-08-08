@@ -4,13 +4,13 @@ import config
 import time
 from _logging import get_logger
 
-
 logger = get_logger()
 
 
 def create_kafka_topic(broker_name, topic_names, num_partitions=1, replication_factor=1):
     # Configure the admin client with the bootstrap servers
     admin_client = create_admin_client(broker_name)
+    logger.info("Admin client connected to Kafka broker!")
 
     # Create a list of NewTopic object with topic configuration
     topics_list = []

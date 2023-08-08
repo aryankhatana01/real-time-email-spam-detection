@@ -26,7 +26,7 @@ def get_gmail_service():
             token.write(creds.to_json())
 
     # Build the Gmail API service
-    service = build('gmail', 'v1', credentials=creds)
+    service = build('gmail', 'v1', credentials=creds, cache_discovery=False)
     return service
 
 

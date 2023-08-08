@@ -6,6 +6,7 @@ __pycache__/
 client_secret_865327337803-eubikv864986cngvm0rirst7rkk1mp5a.apps.googleusercontent.com.json
 token.json
 best_model_state.bin
+credentials.json
 
 # C extensions
 *.so

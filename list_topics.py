@@ -1,9 +1,9 @@
 from confluent_kafka.admin import AdminClient
 import config
 from admin_client import create_admin_client
-from _logging import get_logger
+from _logging import logger
 
-logger = get_logger()
+# logger = get_logger()
 
 def list_kafka_topics(broker_name):
     # Configure the admin client with the bootstrap servers

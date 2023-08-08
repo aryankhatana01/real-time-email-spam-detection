@@ -2,9 +2,9 @@ from confluent_kafka.admin import AdminClient
 import config
 from admin_client import create_admin_client
 import argparse
-from _logging import get_logger
+from _logging import logger
 
-logger = get_logger()
+# logger = get_logger()
 
 
 def delete_kafka_topics(broker_name, topics):

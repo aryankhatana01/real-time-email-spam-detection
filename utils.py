@@ -1,9 +1,9 @@
-from _logging import get_logger
+from _logging import logger
 import socket
 import config
 from confluent_kafka import Producer, Consumer
 
-logger = get_logger()
+# logger = get_logger()
 
 def create_producer():
     try:

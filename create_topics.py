@@ -2,9 +2,9 @@ from confluent_kafka.admin import NewTopic
 from admin_client import create_admin_client
 import config
 import time
-from _logging import get_logger
+from _logging import logger
 
-logger = get_logger()
+# logger = get_logger()
 
 
 def create_kafka_topic(broker_name, topic_names, num_partitions=1, replication_factor=1):

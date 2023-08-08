@@ -1,7 +1,4 @@
 from confluent_kafka.admin import AdminClient
-from _logging import get_logger
-
-logger = get_logger()
 
 def wait_for_admin_client(admin_client):
     # Wait until the admin client is connected to the Kafka cluster
@@ -16,5 +13,4 @@ def create_admin_client(broker_name):
         'bootstrap.servers': broker_name
     })
     wait_for_admin_client(admin_client)
-    logger.info("Admin client connected to Kafka broker!")
     return admin_client

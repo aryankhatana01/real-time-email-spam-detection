@@ -7,10 +7,12 @@ from multiprocessing import Process
 from utils import create_consumer, create_producer
 import config
 from _logging import logger
-from computation.preprocesser import convert_to_string_and_cleanup, combine_subject_and_body
+from computation.preprocessor import convert_to_string_and_cleanup, combine_subject_and_body
 from inference import inference
 from computation.configure_model import get_configured_model
 import numpy as np
+import datetime
+import time
 
 
 def predict():
@@ -20,8 +22,9 @@ def predict():
     model = get_configured_model()
 
     while True:
-        message = consumer.poll(timeout=400)
+        message = consumer.poll()
         if message is None:
+            time.sleep(15)
             continue
         if message.error():
             logger.error("Consumer error: {}".format(message.error()))
@@ -34,8 +37,22 @@ def predict():
             model=model,
             msg=msg
         )
-        logger.info(f"Predictions: {predictions}")
+
+        probs_converted_to_list = predictions_probs.numpy().tolist()
+        record["probs"] = probs_converted_to_list[0]
+        record["prediction"] = predictions.numpy().tolist() # 1 for spam, 0 for ham
+        record['timestamp'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        pred_record = json.dumps(record).encode('utf-8')
+
+        producer.produce(topic=config.PREDICTIONS_TOPIC,
+                         value=pred_record)
+        producer.flush()
+
         logger.info(f"Message received with ID {record['id']}")
+        logger.info(f"Predictions: {predictions}")
+        logger.info(f"Predictions sent with ID {record['id']}")
+        print()
+    consumer.close()
 
 # One consumer per partition
 if __name__ == "__main__":

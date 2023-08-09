@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset
-import config
+from . import config
 
 class TestDataset(Dataset):
     def __init__(self, msgs):

@@ -1,7 +1,7 @@
 # Same as the training model
 import torch.nn as nn
 from transformers import BertModel
-import config
+from . import config
 
 class SpamClassifier(nn.Module):
     def __init__(self, n_classes):

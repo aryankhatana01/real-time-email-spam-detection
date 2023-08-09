@@ -1,8 +1,8 @@
 import torch
-import config
-from test_dataset import TestDataset
+from . import config
+from .test_dataset import TestDataset
 from torch.utils.data import DataLoader
-from model import SpamClassifier
+from .model import SpamClassifier
 import numpy as np
 
 def create_dl(msg):

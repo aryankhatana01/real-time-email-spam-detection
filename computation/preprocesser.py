@@ -1,6 +1,5 @@
 # This file will contain the preprocessing functions for the data.
 import re
-import sys
 
 def remove_special_characters(body):
     clean_string = re.sub(r'[^\x00-\x7F]+|[\x00-\x1F\x7F-\x9F]+|\s+', ' ', body)

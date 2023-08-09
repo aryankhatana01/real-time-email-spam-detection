@@ -1,5 +1,6 @@
 # This file will contain the preprocessing functions for the data.
 import re
+import sys
 
 def remove_special_characters(body):
     clean_string = re.sub(r'[^\x00-\x7F]+|[\x00-\x1F\x7F-\x9F]+|\s+', ' ', body)
@@ -19,4 +20,11 @@ def convert_to_string_and_cleanup(record):
     string = string.replace('</https:>', ' ')
     string = string.strip()
     record["body"] = string
+    return record
+
+def combine_subject_and_body(record): # That's how the data was in the training set
+    subject = record["subject"]
+    body = record["body"]
+    string = f'Subject: {subject} {body}'
+    record["msg"] = string
     return record

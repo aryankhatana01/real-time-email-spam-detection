@@ -64,9 +64,40 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: "emails:3:1,predictions:3:1"
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  emails-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.Consumer
+    networks:
+      - kafka_network
+    ports:
+      - 81:81
+
+  emails-deleter:
+    build:
+      context: .
+      dockerfile: Dockerfile.Deleter
+    networks:
+      - kafka_network
+    ports:
+      - 82:82
+  
+  emails-producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.Producer
+    networks:
+      - kafka_network
+    depends_on:
+      - emails-consumer
+      - emails-deleter
+    ports:
+      - 80:80
 
 
 networks:

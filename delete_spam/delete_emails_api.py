@@ -23,7 +23,7 @@ def move_email_to_trash(email_id):
             token.write(creds.to_json())
 
     # Create the Gmail API service
-    service = build('gmail', 'v1', credentials=creds)
+    service = build('gmail', 'v1', credentials=creds, cache_discovery=False)
 
     try:
         # Modify the labels of the email to move it to the trash

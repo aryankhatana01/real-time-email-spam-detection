@@ -1,4 +1,4 @@
-KAFKA_BROKER = "localhost:29092"
+KAFKA_BROKER = "kafka:9092"
 NUM_PARTITIONS = 3
 EMAILS_TOPIC = "emails"
 EMAILS_GROUP_ID = "emails"

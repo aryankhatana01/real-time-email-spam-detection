@@ -14,22 +14,21 @@ import numpy as np
 import datetime
 import time
 
-
+consumer = create_consumer(topic=config.EMAILS_TOPIC, group_id=config.EMAILS_GROUP_ID)
+producer = create_producer()
+model = get_configured_model()
 def predict():
-    consumer = create_consumer(topic=config.EMAILS_TOPIC, group_id=config.EMAILS_GROUP_ID)
-    producer = create_producer()
-
-    model = get_configured_model()
 
     while True:
         message = consumer.poll()
         if message is None:
-            time.sleep(15)
+            # time.sleep(15)
             continue
         if message.error():
             logger.error("Consumer error: {}".format(message.error()))
             continue
         record = json.loads(message.value().decode('utf-8'))
+        consumer.commit(message)
         record = convert_to_string_and_cleanup(record)
         record = combine_subject_and_body(record)
         msg = np.array([record['msg']])
@@ -55,8 +54,8 @@ def predict():
     consumer.close()
 
 # One consumer per partition
-if __name__ == "__main__":
-    for _ in range(config.NUM_PARTITIONS):
-        p = Process(target=predict)
-        p.start()
-    # predict()
+# if __name__ == "__main__":
+    # for _ in range(config.NUM_PARTITIONS):
+    #     p = Process(target=predict)
+    #     p.start()
+predict()

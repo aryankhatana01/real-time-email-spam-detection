@@ -8,6 +8,11 @@ COMPLETED THE PROJECT!! I didn't expect I would be able to even come close to bu
 
 TODO:
 - [ ] Model retraining after getting new data
+- [ ] Figure out a way to mark ham emails as unread w/o going in an infinte loop
+- [ ] Fix the 3 docker container setup(NOT IMPORTANT)
+
+## DEMO
+A demo of the complete working project can be found [here using docker](https://drive.google.com/file/d/1VyFT3uT3pHVL-WEEWdlaB_t1SOz4f1Yy/view?usp=sharing) or [here without using docker.](https://drive.google.com/file/d/1LL_tAkL4hE6ELuHDxyBQ6T3-nxhxU__S/view?usp=sharing)
 
 
 ## The Pipeline

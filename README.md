@@ -12,9 +12,6 @@ TODO:
 - [ ] Fix the 3 docker container setup(NOT IMPORTANT)
 - [ ] Add a better logging mechanism
 
-## DEMO
-A demo of the complete working project can be found [here using docker](https://drive.google.com/file/d/1VyFT3uT3pHVL-WEEWdlaB_t1SOz4f1Yy/view?usp=sharing) or [here without using docker.](https://drive.google.com/file/d/1LL_tAkL4hE6ELuHDxyBQ6T3-nxhxU__S/view?usp=sharing)
-
 
 ## The Pipeline
 

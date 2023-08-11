@@ -1,40 +1,4 @@
 # This is the docker compose file which runs all the services
-# version: '3'
-# services:
-#   zookeeper:
-#     image: wurstmeister/zookeeper
-#     container_name: zookeeper
-#     ports:
-#       - "2181:2181"
-#     platform: linux/amd64
-#     environment:
-#       ZOO_MY_ID: 1
-#       ZOO_SERVERS: server.1=zookeeper:2888:3888
-
-#   kafka:
-#     image: wurstmeister/kafka
-#     container_name: kafka
-#     ports:
-#       - "9092:9092"
-#     environment:
-#       KAFKA_LISTENERS: PLAINTEXT://:9092
-#       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-#       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#       # KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,EXTERNAL_DIFFERENT_HOST://:29093,INTERNAL://:9092
-#       # KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://localhost:29092,EXTERNAL_DIFFERENT_HOST://172.23.0.3:29093
-#       # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT      
-#       # KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-#       # KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#       # KAFKA_CREATE_TOPICS: "topic1:1:1"
-
-#     volumes:
-#       - /var/run/docker.sock:/var/run/docker.sock
-
-#     depends_on:
-#       - zookeeper
-
-
 version: '2'
 services:
   zookeeper:
@@ -64,38 +28,58 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "emails:3:1,predictions:3:1"
+      # KAFKA_CREATE_TOPICS: "emails:3:1,predictions:3:1"
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  emails-consumer:
-    build:
-      context: .
-      dockerfile: Dockerfile.Consumer
-    networks:
-      - kafka_network
-    ports:
-      - 81:81
+  # emails-consumer:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.Consumer
+  #   networks:
+  #     - kafka_network
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   ports:
+  #     - 81:81
 
-  emails-deleter:
-    build:
-      context: .
-      dockerfile: Dockerfile.Deleter
-    networks:
-      - kafka_network
-    ports:
-      - 82:82
+  # emails-deleter:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.Deleter
+  #   networks:
+  #     - kafka_network
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   ports:
+  #     - 82:82
   
-  emails-producer:
+  # emails-producer:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.Producer
+  #   networks:
+  #     - kafka_network
+  #   depends_on:
+  #     - emails-consumer
+  #     - emails-deleter
+  #     - kafka
+  #     - zookeeper
+  #   ports:
+  #     - 80:80
+  
+  unified:
     build:
       context: .
-      dockerfile: Dockerfile.Producer
+      dockerfile: Dockerfile.Unified
     networks:
       - kafka_network
     depends_on:
-      - emails-consumer
-      - emails-deleter
+      - kafka
+      - zookeeper
     ports:
       - 80:80
 

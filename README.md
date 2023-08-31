@@ -1,14 +1,14 @@
 # Real-Time Email Spam Detection
 
-I am pretty sure that I won't be able to complete this project as I literally know nothing about Kafka, I'll be learning while working on this project and trying to complete it. I will be using the Gmail API that ingests new emails and sends them to Kafka as streams for processing and inference, if the email is classified as spam it would be deleted.
+I am pretty sure that I won't be able to complete this project as I literally know nothing about Kafka, I'll be learning while working on this project and trying to complete it. I will be using the Gmail API that ingests new emails and sends them to Kafka as streams for processing and inference, if the email is classified as spam it will be deleted.
 
 ## UPDATE
 
-COMPLETED THE PROJECT!! I didn't expect I would be able to even come close to building this project, I even dockerized the entire app so anyone can use it. The architecture is the same as the figure below.
+COMPLETED THE PROJECT!! The architecture is the same as the figure below.
 
 TODO:
 - [ ] Model retraining after getting new data
-- [ ] Figure out a way to mark ham emails as unread w/o going in an infinte loop
+- [ ] Figure out a way to mark ham emails as unread w/o going in an infinite loop
 - [ ] Fix the 3 docker container setup(NOT IMPORTANT)
 - [ ] Add a better logging mechanism
 
